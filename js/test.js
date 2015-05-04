@@ -66,7 +66,19 @@ function setPick(clickedId) {
 }
 
 function playGame() {
+	leftPick.innerHTML = getCompMove();
 	alert('game is played!');
+}
+
+function getCompMove() {
+	var randomNumber = Math.random();
+    if (randomNumber < 0.33) {
+        return "rock";
+    } else if (randomNumber < 0.66) {
+        return "paper";
+    } else {
+        return "scissors";
+    }
 }
 
 
