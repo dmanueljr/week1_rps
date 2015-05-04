@@ -30,9 +30,9 @@ function gameOn() {
 function setGame() {
 	leftPick.innerHTML = "waiting..";
 	rightPick.innerHTML = "waiting..";
-	pickRock.addEventListener("click", setPick);
-	pickPaper.addEventListener("click", setPick);
-	pickScissors.addEventListener("click", setPick);
+	pickRock.addEventListener("click", function() { setPick(this.id); });
+	pickPaper.addEventListener("click", function() { setPick(this.id); });
+	pickScissors.addEventListener("click", function() { setPick(this.id); });
 }
 
 function noGame() {
@@ -48,7 +48,19 @@ function getCompName() {
 		return namePicker;
 }
 
-function setPick() {
+function setPick(clickedId) {
+	var pP = clickedId;
+	rightPick.innerHTML = pP;
+	if (pP == 'rock') {
+		pickPaper.style.backgroundColor = "#d3d3d3";
+		pickScissors.style.backgroundColor = "#d3d3d3";
+	} else if (pP == 'paper') {
+			pickRock.style.backgroundColor = "#d3d3d3";
+			pickScissors.style.backgroundColor = "#d3d3d3";
+	} else {
+			pickRock.style.backgroundColor = "#d3d3d3";
+			pickPaper.style.backgroundColor = "#d3d3d3";
+	}
 	playButton.style.backgroundColor = "#00b359";
 	playButton.addEventListener("click", playGame);
 }
@@ -66,8 +78,8 @@ banner = document.getElementById('top');
 mainView = document.getElementById('game');
 intro = document.getElementById('message');
 newPlayer = document.getElementById('inputName');
-rightPick = document.getElementById('compPick');
-leftPick = document.getElementById('playerPick');
+leftPick = document.getElementById('compPick');
+rightPick = document.getElementById('playerPick');
 go = document.getElementById('play')
 announce = document.getElementById('resultMessage');
 pickRock = document.getElementById('rock');
