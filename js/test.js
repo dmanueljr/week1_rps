@@ -6,10 +6,16 @@ function startup() {
 	noButton.addEventListener("click", noGame);
 }
 
+function noGame() {
+	document.getElementById('messageDisplay').innerHTML = "Alright. Maybe next time!";
+	noButton.style.display = "none";
+	yesButton.style.display = "none";
+}
+
 function getPlayerName() {
 	newPlayer.style.display = "block";
 	intro.style.display = "none";
-	document.getElementById('submitText').addEventListener("click", submitName); 
+	document.getElementById('submitText').addEventListener("click", submitName);
 }
 
 function submitName() {
@@ -17,28 +23,10 @@ function submitName() {
     document.getElementById('playerName').innerHTML = pN;
     document.getElementById('inputName').style.display = "none";
     document.getElementById('compName').innerHTML = getCompName();
-	gameOn();
-}
-
-function gameOn() {
 	announce.innerHTML = "Ready? First to 5 wins the game. Choose your move wisely!";
 	banner.style.display = "block";
 	mainView.style.display = "block";
-	setGame();
-}
-
-function setGame() {
-	leftPick.innerHTML = "waiting..";
-	rightPick.innerHTML = "waiting..";
-	pickRock.addEventListener("click", function() { setPick(this.id); });
-	pickPaper.addEventListener("click", function() { setPick(this.id); });
-	pickScissors.addEventListener("click", function() { setPick(this.id); });
-}
-
-function noGame() {
-	document.getElementById('messageDisplay').innerHTML = "Alright. Maybe next time!";
-	noButton.style.display = "none";
-	yesButton.style.display = "none";
+	gameOn();
 }
 
 function getCompName() {
@@ -48,9 +36,19 @@ function getCompName() {
 		return namePicker;
 }
 
+function gameOn() {
+	leftPick.innerHTML = "waiting..";
+	rightPick.innerHTML = "waiting..";
+	pickRock.addEventListener("click", function() { setPick(this.id); });
+	pickPaper.addEventListener("click", function() { setPick(this.id); });
+	pickScissors.addEventListener("click", function() { setPick(this.id); });
+}
+
 function setPick(clickedId) {
 	var pP = clickedId;
 	rightPick.innerHTML = pP;
+	playerMove = pP;
+//	alert(playerMove);
 	if (pP == 'rock') {
 		pickPaper.style.backgroundColor = "#d3d3d3";
 		pickScissors.style.backgroundColor = "#d3d3d3";
@@ -66,8 +64,11 @@ function setPick(clickedId) {
 }
 
 function playGame() {
+//	alert(playerMove);
 	leftPick.innerHTML = getCompMove();
-	alert('game is played!');
+	computerMove = leftPick.innerHTML;
+	getWinner(playerMove, computerMove);
+	alert(getWinner(playerMove, computerMove))
 }
 
 function getCompMove() {
@@ -80,6 +81,44 @@ function getCompMove() {
         return "scissors";
     }
 }
+
+function getWinner(pMove, cMove) {
+//	alert(computerMove);
+//	alert(playerMove);
+	var winner;
+	switch (playerMove) {
+		case 'rock':
+			if (computerMove == 'rock') {
+				winner = 'tie';
+			} else if (computerMove == 'paper') {
+				winner = 'computer';
+			} else if (computerMove == 'scissors') {
+				winner = 'player';
+			}
+		break;
+		case 'paper':
+			if (computerMove == 'rock') {
+				winner = 'player';
+			} else if (computerMove == 'paper') {
+			winner = 'tie';
+			} else if (computerMove == 'scissors') {
+				winner = 'computer';
+			}
+		break;
+		case 'scissors':
+			if (computerMove == 'rock') {
+				winner = 'computer';
+			} else if (computerMove == 'paper') {
+				winner = 'player';
+			} else if (computerMove == 'scissors') {
+				winner = 'tie';
+			}
+		break;
+	}
+//	alert(winner);
+	return winner;
+}
+
 
 
 window.addEventListener("load", startup);
@@ -99,12 +138,5 @@ pickPaper = document.getElementById('paper');
 pickScissors = document.getElementById('scissors');
 playButton = document.getElementById('play')
 
-
-
-
-
-
-
-
-
-
+playerMove = "";
+computerMove = "";
