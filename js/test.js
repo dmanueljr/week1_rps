@@ -14,7 +14,7 @@ function noGame() {
 
 function getPlayerName() {
 	newPlayer.style.display = "block";
-	intro.style.display = "none";
+	message.style.display = "none";
 	document.getElementById('submitText').addEventListener("click", submitName);
 }
 
@@ -48,16 +48,24 @@ function setPick(clickedId) {
 	var pP = clickedId;
 	rightPick.innerHTML = pP;
 	playerMove = pP;
-//	alert(playerMove);
+	leftPick.innerHTML = "waiting..";
+	document.getElementById('comp').style.backgroundColor = "#f4f4f4";
+	document.getElementById('comp').style.color = "#323232";
+	document.getElementById('player').style.backgroundColor = "#f4f4f4";
+	document.getElementById('player').style.color = "#323232";
+	//	alert(playerMove);
 	if (pP == 'rock') {
+		pickRock.style.backgroundColor = "#ff7f00";
 		pickPaper.style.backgroundColor = "#d3d3d3";
 		pickScissors.style.backgroundColor = "#d3d3d3";
 	} else if (pP == 'paper') {
 			pickRock.style.backgroundColor = "#d3d3d3";
+			pickPaper.style.backgroundColor = "#ff7f00";
 			pickScissors.style.backgroundColor = "#d3d3d3";
 	} else {
 			pickRock.style.backgroundColor = "#d3d3d3";
 			pickPaper.style.backgroundColor = "#d3d3d3";
+			pickScissors.style.backgroundColor = "#ff7f00";
 	}
 	playButton.style.backgroundColor = "#00b359";
 	playButton.addEventListener("click", playGame);
@@ -67,8 +75,9 @@ function playGame() {
 //	alert(playerMove);
 	leftPick.innerHTML = getCompMove();
 	computerMove = leftPick.innerHTML;
-	getWinner(playerMove, computerMove);
-	alert(getWinner(playerMove, computerMove))
+	var winner = getWinner(playerMove, computerMove);
+	playToFive(winner);
+//	alert(winner);
 }
 
 function getCompMove() {
@@ -119,15 +128,71 @@ function getWinner(pMove, cMove) {
 	return winner;
 }
 
+function playToFive(x) {
+    if (playerWins < 5 && computerWins < 5) {
+        if (x == 'player') {
+            playerWins += 1;
+            announce.innerHTML = "You win!";
+			document.getElementById('player').style.backgroundColor = "#00b359";
+			document.getElementById('player').style.color = "#ffffff";
+			document.getElementById('comp').style.backgroundColor = "#ff0000";
+			document.getElementById('comp').style.color = "#ffffff";
+			if (playerWins == 5) {
+//				announce.innerHTML = "You win the game!";
+				banner.style.display = "none";
+				mainView.style.display = "none";
+				document.getElementById('finalMessage').style.display = "block";
+				document.getElementById('winner').innerHTML = "Congratulations! You win the game!";
+				document.getElementsByTagName('body')[0].style.backgroundColor = "#00b359";
+			}
+        } else if (x == 'computer') {
+            computerWins += 1;
+			cN = (document.getElementById('compName').innerHTML + " wins!")
+			cNw = ("Sorry! " + document.getElementById('compName').innerHTML + " wins the game!")
+			announce.innerHTML = cN;
+			document.getElementById('comp').style.backgroundColor = "#00b359";
+			document.getElementById('comp').style.color = "#ffffff";
+			document.getElementById('player').style.backgroundColor = "#ff0000";
+			document.getElementById('player').style.color = "#ffffff";
+			if (computerWins == 5) {
+//				announce.innerHTML = cNw;
+				banner.style.display = "none";
+				mainView.style.display = "none";
+				document.getElementById('finalMessage').style.display = "block";
+				document.getElementById('winner').innerHTML = cNw;
+				document.getElementsByTagName('body')[0].style.backgroundColor = "#ff0000";
+			}
+        } else {
+			announce.innerHTML = "It's a tie. No one wins!";
+			document.getElementById('comp').style.backgroundColor = "#f4f4f4";
+			document.getElementById('comp').style.color = "#323232";
+			document.getElementById('player').style.backgroundColor = "#f4f4f4";
+			document.getElementById('player').style.color = "#323232";
+        }
+        pickRock.style.backgroundColor = "#ff7f00";
+        pickPaper.style.backgroundColor = "#ff7f00";
+        pickScissors.style.backgroundColor = "#ff7f00";
+        playButton.style.backgroundColor = "#d3d3d3";
+    }
+	document.getElementById('playerScore').innerHTML = playerWins;
+	document.getElementById('compScore').innerHTML = computerWins;
+}
+
+
+
+
+
 
 
 window.addEventListener("load", startup);
 
+var playerWins = 0;
+var computerWins = 0;    
 noButton = document.getElementById('messageButton1');
 yesButton = document.getElementById('messageButton2');
 banner = document.getElementById('top');
 mainView = document.getElementById('game');
-intro = document.getElementById('message');
+message = document.getElementById('message');
 newPlayer = document.getElementById('inputName');
 leftPick = document.getElementById('compPick');
 rightPick = document.getElementById('playerPick');
