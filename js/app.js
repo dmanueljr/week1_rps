@@ -1,27 +1,100 @@
 
-////////////////////////////////////////////////
-/*           Write Your Code Below            */
-////////////////////////////////////////////////
 
-function getPlayerMove(move) {
-    // Write an expression that operates on a variable called `move`
-    // If a `move` has a value, your expression should evaluate to that value.
-    // However, if `move` is not specified / is null, your expression should equal `getInput()`.
-    return move || getInput();
+function startup() {
+//  alert("startup called!");
+    yesButton.addEventListener("click", getPlayerName);
+    noButton.addEventListener("click", noGame);
 }
 
-function getComputerMove(move) {
-    // Write an expression that operates on a variable called `move`
-    // If a `move` has a value, your expression should evaluate to that value.
-    // However, if `move` is not specified / is null, your expression should equal `randomPlay()`.
-    return move || randomPlay();
+function noGame() {
+    document.getElementById('messageDisplay').innerHTML = "Alright. Maybe next time!";
+    noButton.style.display = "none";
+    yesButton.style.display = "none";
 }
 
-function getWinner(playerMove,computerMove) {
+function getPlayerName() {
+    newPlayer.style.display = "block";
+    message.style.display = "none";
+    document.getElementById('submitText').addEventListener("click", submitName);
+}
+
+function submitName() {
+    var pN = document.getElementById('inputText').value || "you";
+    document.getElementById('playerName').innerHTML = pN;
+    document.getElementById('inputName').style.display = "none";
+    document.getElementById('compName').innerHTML = getCompName();
+    announce.innerHTML = "Ready? First to 5 wins the game. Choose your move wisely!";
+    banner.style.display = "block";
+    mainView.style.display = "block";
+    gameOn();
+}
+
+function getCompName() {
+    var compNames = ["The Hulk", "Spiderman", "Superman", "The Joker", "Thor", "Mario", "Luigi", "Bowser", "Creeper", "The Lorax", "Cinderella", "Maleficent", "Enderman", "Chika", "Freddy", "Bonnie", "Mangle", "Foxy", "Chuckie"];
+        var pick = Math.floor(Math.random() * compNames.length);
+        var namePicker = compNames[pick];
+        return namePicker;
+}
+
+function gameOn() {
+    leftPick.innerHTML = "waiting..";
+    rightPick.innerHTML = "waiting..";
+    pickRock.addEventListener("click", function() { setPick(this.id); });
+    pickPaper.addEventListener("click", function() { setPick(this.id); });
+    pickScissors.addEventListener("click", function() { setPick(this.id); });
+}
+
+function setPick(clickedId) {
+    var pP = clickedId;
+    rightPick.innerHTML = pP;
+    playerMove = pP;
+    leftPick.innerHTML = "waiting..";
+    document.getElementById('comp').style.backgroundColor = "#f4f4f4";
+    document.getElementById('comp').style.color = "#323232";
+    document.getElementById('player').style.backgroundColor = "#f4f4f4";
+    document.getElementById('player').style.color = "#323232";
+    //  alert(playerMove);
+    if (pP == 'rock') {
+        pickRock.style.backgroundColor = "#ff7f00";
+        pickPaper.style.backgroundColor = "#d3d3d3";
+        pickScissors.style.backgroundColor = "#d3d3d3";
+    } else if (pP == 'paper') {
+            pickRock.style.backgroundColor = "#d3d3d3";
+            pickPaper.style.backgroundColor = "#ff7f00";
+            pickScissors.style.backgroundColor = "#d3d3d3";
+    } else {
+            pickRock.style.backgroundColor = "#d3d3d3";
+            pickPaper.style.backgroundColor = "#d3d3d3";
+            pickScissors.style.backgroundColor = "#ff7f00";
+    }
+    playButton.style.backgroundColor = "#00b359";
+    playButton.addEventListener("click", playGame);
+}
+
+function playGame() {
+//  alert(playerMove);
+    leftPick.innerHTML = getCompMove();
+    computerMove = leftPick.innerHTML;
+    var winner = getWinner(playerMove, computerMove);
+    playToFive(winner);
+//  alert(winner);
+}
+
+function getCompMove() {
+    var randomNumber = Math.random();
+    if (randomNumber < 0.33) {
+        return "rock";
+    } else if (randomNumber < 0.66) {
+        return "paper";
+    } else {
+        return "scissors";
+    }
+}
+
+function getWinner(pMove, cMove) {
+//  alert(computerMove);
+//  alert(playerMove);
     var winner;
-    // Write code that will set winner to either 'player', 'computer', or 'tie' based on the values of playerMove and computerMove.
-    // Assume that the only values playerMove and computerMove can have are 'rock', 'paper', and 'scissors'.
-    // The rules of the game are that 'rock' beats 'scissors', 'scissors' beats 'paper', and 'paper' beats 'rock'.
     switch (playerMove) {
         case 'rock':
             if (computerMove == 'rock') {
@@ -33,10 +106,10 @@ function getWinner(playerMove,computerMove) {
             }
         break;
         case 'paper':
-             if (computerMove == 'rock') {
+            if (computerMove == 'rock') {
                 winner = 'player';
             } else if (computerMove == 'paper') {
-               winner = 'tie';
+            winner = 'tie';
             } else if (computerMove == 'scissors') {
                 winner = 'computer';
             }
@@ -50,39 +123,85 @@ function getWinner(playerMove,computerMove) {
                 winner = 'tie';
             }
         break;
-        default:
-            winner = 'Sorry, that is not a valid move. Please try again.';
-        break;
     }
-
+//  alert(winner);
     return winner;
 }
 
-function playToFive() {
-    console.log("Let's play Rock, Paper, Scissors");
-    var playerWins = 0;
-    var computerWins = 0;
-    // Write code that plays 'Rock, Paper, Scissors' until either the player or the computer has won five times.
-    while (playerWins < 5 && computerWins < 5){
-        if (getWinner('player')) {
+function playToFive(x) {
+    if (playerWins < 5 && computerWins < 5) {
+        if (x == 'player') {
             playerWins += 1;
-            console.log('Player chose ' + playerMove + 'while Computer chose ' + computerMove + '. Player wins!');
-            console.log('The score is currently ' + 'player: ' + playerWins + 'to ' + 'computer: ' + computerWins);
-        } else if (getWinner('computer')) {
+            announce.innerHTML = "You win!";
+            document.getElementById('player').style.backgroundColor = "#00b359";
+            document.getElementById('player').style.color = "#ffffff";
+            document.getElementById('comp').style.backgroundColor = "#ff0000";
+            document.getElementById('comp').style.color = "#ffffff";
+            if (playerWins == 5) {
+//              announce.innerHTML = "You win the game!";
+                banner.style.display = "none";
+                mainView.style.display = "none";
+                document.getElementById('finalMessage').style.display = "block";
+                document.getElementById('winner').innerHTML = "Congratulations! You win the game!";
+                document.getElementsByTagName('body')[0].style.backgroundColor = "#00b359";
+            }
+        } else if (x == 'computer') {
             computerWins += 1;
-            console.log('Player chose ' + playerMove + 'while Computer chose ' + computerMove + '. Computer wins!');
-            console.log('The score is currently ' + 'player: ' + playerWins + 'to ' + 'computer: ' + computerWins);
-        } else if (getWinner('tie')) {
-            console.log('Player chose ' + playerMove + 'while Computer chose ' + computerMove + '. No one wins.');
-            console.log('The score is currently ' + 'player: ' + playerWins + 'to ' + 'computer: ' + computerWins);
+            cN = (document.getElementById('compName').innerHTML + " wins!")
+            cNw = ("Sorry! " + document.getElementById('compName').innerHTML + " wins the game!")
+            announce.innerHTML = cN;
+            document.getElementById('comp').style.backgroundColor = "#00b359";
+            document.getElementById('comp').style.color = "#ffffff";
+            document.getElementById('player').style.backgroundColor = "#ff0000";
+            document.getElementById('player').style.color = "#ffffff";
+            if (computerWins == 5) {
+//              announce.innerHTML = cNw;
+                banner.style.display = "none";
+                mainView.style.display = "none";
+                document.getElementById('finalMessage').style.display = "block";
+                document.getElementById('winner').innerHTML = cNw;
+                document.getElementsByTagName('body')[0].style.backgroundColor = "#ff0000";
+            }
         } else {
-            console.log('Ooops! Invalid move - please try again!');
+            announce.innerHTML = "It's a tie. No one wins!";
+            document.getElementById('comp').style.backgroundColor = "#f4f4f4";
+            document.getElementById('comp').style.color = "#323232";
+            document.getElementById('player').style.backgroundColor = "#f4f4f4";
+            document.getElementById('player').style.color = "#323232";
         }
-    } 
-    if (playerWins > computerWins) {
-        console.log ('Player wins the game!');
-    } else {
-            console.log ('Computer wins the game!');
-    } 
-    return [playerWins, computerWins];
+        pickRock.style.backgroundColor = "#ff7f00";
+        pickPaper.style.backgroundColor = "#ff7f00";
+        pickScissors.style.backgroundColor = "#ff7f00";
+        playButton.style.backgroundColor = "#d3d3d3";
+    }
+    document.getElementById('playerScore').innerHTML = playerWins;
+    document.getElementById('compScore').innerHTML = computerWins;
 }
+
+
+
+
+
+
+
+window.addEventListener("load", startup);
+
+var playerWins = 0;
+var computerWins = 0;    
+noButton = document.getElementById('messageButton1');
+yesButton = document.getElementById('messageButton2');
+banner = document.getElementById('top');
+mainView = document.getElementById('game');
+message = document.getElementById('message');
+newPlayer = document.getElementById('inputName');
+leftPick = document.getElementById('compPick');
+rightPick = document.getElementById('playerPick');
+go = document.getElementById('play')
+announce = document.getElementById('resultMessage');
+pickRock = document.getElementById('rock');
+pickPaper = document.getElementById('paper');
+pickScissors = document.getElementById('scissors');
+playButton = document.getElementById('play')
+
+playerMove = "";
+computerMove = "";
